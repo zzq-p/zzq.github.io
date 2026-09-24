@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LogicSim · 逻辑关系图</title>
+  <link rel="stylesheet" href="lib/joint.css">
+  <link rel="stylesheet" href="style.css">
+  <script defer src="lib/jquery.min.js"></script>
+  <script defer src="lib/lodash.min.js"></script>
+  <script defer src="lib/backbone.js"></script>
+  <script defer src="lib/graphlib.min.js"></script>
+  <script defer src="lib/dagre.min.js"></script>
+  <script defer src="lib/joint.js"></script>
+  <script defer src="src/core.js"></script>
+  <script defer src="src/app.js"></script>
+</head>
+<body>
+  <header><div><strong>LogicSim</strong><span>逻辑关系图 · 本地版</span></div><div class="actions">
+    <button id="import">载入文件</button><button id="download">保存文件</button>
+    <input id="file" type="file" accept=".json,.txt,application/json,text/plain" hidden>
+  </div></header>
+  <main>
+    <section class="editor" aria-label="表达式与模型">
+      <div class="expression-panel">
+        <label for="expression">逆波兰表达式</label>
+        <textarea id="expression" spellcheck="false" placeholder="例如：a b . fe >">a b . fe ></textarea>
+        <div class="actions"><button id="generate" class="primary">生成逻辑图</button><button id="parse">仅解析</button><span class="hint">Ctrl / ⌘ + Enter 生成</span></div>
+      </div>
+      <details class="model-panel"><summary>查看 / 编辑 JSON 模型</summary>
+        <label class="sr-only" for="model">JSON 模型</label>
+        <textarea id="model" spellcheck="false">{"nodeArray":[],"linkArray":[]}</textarea>
+        <div class="actions"><button id="load">文本转图</button><button id="serialize">图转文本</button></div>
+      </details>
+    </section>
+    <section class="workspace">
+      <div class="canvas-panel">
+        <div class="canvas-toolbar"><span id="counts">0 个节点 · 0 条连线</span><div class="actions">
+          <button id="zoom-out" aria-label="缩小">−</button><output id="zoom">100%</output><button id="zoom-in" aria-label="放大">+</button>
+          <button id="fit">适应画布</button><button id="layout">重新布局</button>
+        </div></div>
+        <div id="viewport" tabindex="0" aria-label="逻辑图画布，可拖动空白处平移，滚轮缩放"><div id="paper"></div><div id="empty">输入表达式，点击「生成逻辑图」<small>拖动节点调整位置 · 拖动空白处平移 · 滚轮缩放</small></div></div>
+      </div>
+      <aside>
+        <h2>节点属性</h2><p id="selection">点击图中的节点查看和编辑</p>
+        <fieldset id="inspector" disabled>
+          <label for="node-name">名称</label><input id="node-name" maxlength="2000">
+          <label for="node-memo">备注</label><textarea id="node-memo" maxlength="2000"></textarea>
+          <div class="actions"><button id="update">保存修改</button><button id="delete" class="danger">删除节点</button></div>
+        </fieldset>
+        <h2>总览</h2><div id="minimap" aria-label="逻辑图总览"><div id="mini-paper"></div></div>
+        <details open class="help"><summary>输入说明</summary>
+          <p>变量与运算符之间用空格分隔；0、1 表示假、真。</p>
+          <table><thead><tr><th>运算</th><th>示例</th></tr></thead><tbody>
+            <tr><td>与 ∧</td><td><code>a b .</code></td></tr><tr><td>或 ∨</td><td><code>a b ,</code></td></tr>
+            <tr><td>非 ¬</td><td><code>a &lt;</code></td></tr><tr><td>推出 →</td><td><code>a b &gt;</code></td></tr>
+            <tr><td>等价 ↔</td><td><code>a b =</code></td></tr>
+          </tbody></table>
+          <p><code>a b . fe &gt;</code> 表示 (a ∧ b) → fe。SEL 节点根据 SI 输入，在 0、1 两条分支之间选择。恒真、恒假及重复分支会自动简化。</p>
+        </details>
+      </aside>
+    </section>
+  </main>
+  <footer id="status" role="status" aria-live="polite">已就绪。所有计算均在本地完成。</footer>
+</body>
+</html>

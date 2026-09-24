@@ -1,0 +1,7 @@
+{
+  "name": "logicsim-local-refactored",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline logic diagram editor, refactored from kuangdash.gitlab.io/logicsim",
+  "scripts": { "test": "node --test tests/core.test.cjs" }
+}
